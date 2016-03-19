@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>nanaco 13</title>
+</head>
+<body>
+  <!-- <canvas> will be here -->
+  <script src="js/aframe.min.js"></script>
+  <script src="js/react.min.js"></script>
+  <script src="js/react-dom.min.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+  "use strict";
+
+  // definitions
+  const TIME = {
+    DAY_EARTH   : "DAY_EARTH",
+    HOUR_EARTH  : "HOUR_EARTH",
+    MINUTE_EARTH: "MINUTE_EARTH",
+    DAY_A       : "DAY_A",
+    HOUR_A      : "HOUR_A",
+    MINUTE_A    : "MINUTE_A",
+  }
+
+  const POSITION_X = {
+    DAY_EARTH   : -0.128,
+    HOUR_EARTH  : 0.052,
+    MINUTE_EARTH: 0,
+    DAY_A       : 0,
+    HOUR_A      : 0,
+    MINUTE_A    : 0,
+  }
+
+
+  const WIDTH_OF_NUMBER  = 0.0375;
+  const HEIGHT_OF_NUMBER = 0.0375;
+
+  // static component
+  const CAMERA = React.createElement('a-camera', {
+    position: "0 1.8 4",
+    cursor: `
+      fuse       : true;
+      maxDistance: 30;
+      timeout    : 500
+    `,
+  }, []);
+
+  const SKY = React.createElement('a-sky', {
+    src     : "img/space02.jpg",
+    rotation: "90 0 -40",
+  }, []);
+
+  const APATE = React.createElement('a-image', {
+    src     : "img/space03.png",
+    position: "-0.4 2 -15",
+    rotation: "0 0 0",
+    opacity : 0.75,
+  }, [
+    React.createElement('a-animation', {
+      attribute: "rotation",
+      from     : "0 0 0 ",
+      to       : "0 0 359",
+      repeat   : "indefinite",
+      dur      : "600000",
+      easing   : "linear",
+    }, []),
+  ]);
+
+  const TIME_BOARD = React.createElement('a-image', {
+    src     : "img/board.png",
+    position: "0 1.5 3.4",
+    rotation: "-15 0 0",
+    width   : 0.8,
+    height  : 0.45,
+    opacity : 0.9,
+    sound   : `
+      src     : ./raw/drive.wav;
+      autoplay: true;
+      loop    : true;
+      volume  : 2;
+    `,
+  }, [
+    React.createElement('a-animation', {
+      attribute: "position",
+      from     : "0 1.5 3.4",
+      to       : "0 1.508 3.4",
+      repeat   : "indefinite",
+      dur      : "600",
+      direction: "alternateReverse",
+      easing   : "linear",
+    }, []),
+  ]);
+
+  // renderer
+  var render = function(state) {
+    var now = [
+      // DAY_EARTH
+      Math.floor(state.now.sec / 10),
+      Math.floor(state.now.sec % 10),
+
+      // HOUR_EARTH
+      Math.floor(state.now.sec / 10),
+      Math.floor(state.now.sec % 10),
+
+      // MINUTE_EARTH
+      Math.floor(state.now.sec / 10),
+      Math.floor(state.now.sec % 10),
+
+      // DAY_A
+      Math.floor(state.now.sec / 10),
+      Math.floor(state.now.sec % 10),
+
+      // HOUR_A
+      Math.floor(state.now.sec / 10),
+      Math.floor(state.now.sec % 10),
+
+      // MINUTE_A
+      Math.floor(state.now.sec / 10),
+      Math.floor(state.now.sec % 10),
+    ];
+
+    ReactDOM.render(
+    	React.createElement('a-scene', {}, [
+        CAMERA, SKY, APATE,
+        TIME_BOARD,
+
+        // 地球時間
+        renderTime(TIME.DAY_EARTH,    0, now),
+        renderTime(TIME.DAY_EARTH,    1, now),
+        renderTime(TIME.HOUR_EARTH,   0, now),
+        renderTime(TIME.HOUR_EARTH,   1, now),
+        renderTime(TIME.MINUTE_EARTH, 0, now),
+        renderTime(TIME.MINUTE_EARTH, 1, now),
+        // A
+        renderTime(TIME.DAY_A,    0, now),
+        renderTime(TIME.DAY_A,    1, now),
+        renderTime(TIME.HOUR_A,   0, now),
+        renderTime(TIME.HOUR_A,   1, now),
+        renderTime(TIME.MINUTE_A, 0, now),
+        renderTime(TIME.MINUTE_A, 1, now),
+
+        // 飛んで来る星たち
+        shootingStar([40, 12, -500], 2000),
+        shootingStar([40, 12, -300], 2000),
+        shootingStar([-30, 4, -500], 3000),
+        shootingStar([11, -5, -200], 5000),
+        shootingStar([-3, 50, -200], 2500),
+      ]),
+      document.body
+    );
+  };
+
+  // ticker
+  var accumulator = function(n) {
+    var i = n;
+    return function() {
+      return i++ % 100;
+    }
+  }
+
+  var acc = accumulator(0);
+  var sec = setInterval(function() {
+    render({
+      now: { sec: acc() }
+    });
+  }, 200);
+
+  // number renderer
+  /**
+   * renderTime {Int -> Int -> Array<Int> -> ReactDOM}
+   * - renders the image of number
+   * @param type {TIME} - どの時間を表現する数字か
+   * @param order {Int} - 何桁目か
+   * @param now {Array<Int>} - 今の時間
+   * @returns ReactDOM
+   */
+  function renderTime(time, order, now) {
+      var
+      var number    = now[order];
+      var positionX =
+
+      return (
+        React.createElement('a-image', {
+          src     : `img/num0${order}.png`,
+          width   : 0.0375,
+          height  : 0.0600,
+          position: `${type} 1.6 3.4`,
+          rotation: "-10 0 0",
+          sound   : `
+            src     : ./raw/paper.mp3;
+            autoplay: true;
+            loop    : true;
+            volume  : 1;
+          `,
+        }, [
+          React.createElement('a-animation', {
+            attribute: "position",
+            from     : `${type} 1.6   3.4`,
+            to       : `${type} 1.608 3.4`,
+            repeat   : "indefinite",
+            dur      : 600,
+            direction: "alternateReverse",
+            easing   : "linear",
+          }, [])
+        ])
+      );
+  }
+
+  function shootingStar(position, duration) {
+    var positionFrom = `${position[0]} ${position[1]} ${position[2]}`;
+    var positionTo   = `${position[0]} ${position[1]} ${position[2] * -1}`;
+
+    return (
+      React.createElement('a-sphere', {
+        color   : "#dfc",
+        radius  : 0.2,
+        rotation: "0 0 0",
+        opacity : 0.75,
+      }, [
+        React.createElement('a-animation', {
+          from     : positionFrom,
+          to       : positionTo,
+          dur      : duration,
+          attribute: "position",
+          repeat   : "indefinite",
+          easing   : "linear",
+        }, []),
+      ])
+    );
+  }
+
+  function preload() {
+      var images = [];
+      for (var i = 0; i < 10; i++) {
+          console.log(`img/num0${i}.png`);
+          images[i] = new Image();
+          images[i].src = `img/num0${i}.png`;
+      }
+  }
+  preload();
+
+  </script>
+</body>
+</html>
