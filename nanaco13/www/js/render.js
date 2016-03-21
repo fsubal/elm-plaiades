@@ -68,12 +68,17 @@
   ]),
   */
 
-  const DIGIT = function(nth, state) {
+  const DIGIT = function(nth, now) {
+    let p = [
+      [-0.128, 1.6, 3.4],
+      [-0.09,  1.6, 3.4],
+    ];
+
     return React.createElement('a-image', {
       src     : `img/num0${now[0]}.png`,
       width   : 0.0375,
       height  : 0.0600,
-      position: "-0.128 1.6 3.4",
+      position: `${p[nth][0]} ${p[nth][1]} ${p[nth][2]}`,
       rotation: "-10 0 0",
       sound   : `
         src     : ./raw/paper.mp3;
@@ -84,14 +89,14 @@
     }, [
       React.createElement('a-animation', {
         attribute: "position",
-        from     : "-0.128 1.6 3.4",
-        to       : "-0.128 1.608 3.4",
+        from     : `${p[nth][0]} ${p[nth][1]}      ${p[nth][2]}`,
+        to       : `${p[nth][0]} ${p[nth][1]+0.08} ${p[nth][2]}`,
         repeat   : "indefinite",
         dur      : "600",
         direction: "alternateReverse",
         easing   : "linear",
       }, []),
-    ]),
+    ]);
   }
 
 // render関数
