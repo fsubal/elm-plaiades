@@ -2,13 +2,12 @@
   "use strict";
   // main処理
   const main = ( () => {
-    preloadNumbers();
 
     // ステップ関数
     var accumulator = function(n) {
       var i = n;
       return function() {
-        return i++ % 100;
+        return i++;
       }
     }
     var acc = accumulator(0);
@@ -18,7 +17,7 @@
       window.render({
         now: { sec: acc() }
       });
-    }, 200);
+    }, 100);
 
   } )();
 
