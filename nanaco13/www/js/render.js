@@ -75,7 +75,7 @@
     ];
 
     return React.createElement('a-image', {
-      src     : `img/num0${now[0]}.png`,
+      src     : `img/num0${now[nth]}.png`,
       width   : 0.0375,
       height  : 0.0600,
       position: `${p[nth][0]} ${p[nth][1]} ${p[nth][2]}`,
@@ -89,8 +89,8 @@
     }, [
       React.createElement('a-animation', {
         attribute: "position",
-        from     : `${p[nth][0]} ${p[nth][1]}      ${p[nth][2]}`,
-        to       : `${p[nth][0]} ${p[nth][1]+0.08} ${p[nth][2]}`,
+        from     : `${p[nth][0]} ${p[nth][1]}       ${p[nth][2]}`,
+        to       : `${p[nth][0]} ${p[nth][1]+0.008} ${p[nth][2]}`,
         repeat   : "indefinite",
         dur      : "600",
         direction: "alternateReverse",
@@ -140,7 +140,7 @@ var render = function(state) {
       // [1,2,3,4,5,6,7,8,9,10,11,12].map((i) => DIGIT(i, now)),
       DIGIT(0,  now),
       DIGIT(1,  now),
-      DIGIT(2,  now),
+      /*DIGIT(2,  now),
       DIGIT(3,  now),
       DIGIT(4,  now),
       DIGIT(5,  now),
@@ -150,7 +150,7 @@ var render = function(state) {
       DIGIT(9,  now),
       DIGIT(10, now),
       DIGIT(11, now),
-      DIGIT(12, now),
+      DIGIT(12, now),*/
       ShootingStar(-40, -12, -500, 3000),
       ShootingStar(-40, -12, -500, 2000),
       ShootingStar(-40,  12, -500, 2000),
